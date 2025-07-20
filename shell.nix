@@ -12,8 +12,15 @@ in
     llvmPackages.bintools
     fontconfig
     mono6
+    cmake
+    xorg.libXi
+    xorg.libXext
+    xorg.libXrandr
+    xorg.libXinerama
+    xorg.libXcursor
     xorg.libX11
     xorg.libX11.dev
+    libGL
     zlib
     libiconv
     openssl.dev
