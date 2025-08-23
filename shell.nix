@@ -7,7 +7,12 @@
 in
   pkgs.mkShell rec {
     buildInputs = with pkgs; [
+    alsa-lib.dev
+    alsa-lib
+    pkg-configUpstream
     rust-analyzer
+    rustup
+    rustc
     clang
     llvmPackages.bintools
     fontconfig
@@ -45,6 +50,17 @@ in
     vulkan-loader
     libGL
     libGLU
+    alsa-lib.dev
+    alsa-lib
+    xorg.libXi
+    xorg.libXext
+    xorg.libXrandr
+    xorg.libXinerama
+    xorg.libXcursor
+    xorg.libX11
+    xorg.libX11.dev
+    libGL
+ 
     ] }";
 
 
