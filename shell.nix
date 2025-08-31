@@ -9,6 +9,7 @@ in
     buildInputs = with pkgs; [
     alsa-lib.dev
     alsa-lib
+    systemd
     pkg-configUpstream
     rust-analyzer
     rustup
