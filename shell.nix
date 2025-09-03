@@ -1,24 +1,42 @@
 { pkgs ? import <nixpkgs> {} }:
-  
+
   let
     overrides = (builtins.fromTOML (builtins.readFile ./rust-toolchain.toml));
     libPath = with pkgs; lib.makeLibraryPath [
     ];
 in
-  pkgs.mkShell rec {
-    buildInputs = with pkgs; [
-    alsa-lib.dev
+with pkgs;
+  
+  mkShell rec {
+  nativeBuildInputs = [
+    pkg-config
+  ];
+
+#wayland is seperate as it seems to stop vulkan reading the backend if in LD_LIBRARY_PATH
+  waylandInput = [
+  wayland
+  ];
+  buildInputs = [
     alsa-lib
+    libxkbcommon 
+    vulkan-tools
+    vulkan-headers
+    vulkan-loader
+    vulkan-validation-layers
+    lld 
+    pkg-config 
+    cmake
+    clang
     systemd
     pkg-configUpstream
     rust-analyzer
     rustup
     rustc
-    clang
     llvmPackages.bintools
     fontconfig
     mono6
-    cmake
+    libxkbcommon
+    libGL
     xorg.libXi
     xorg.libXext
     xorg.libXrandr
@@ -26,15 +44,15 @@ in
     xorg.libXcursor
     xorg.libX11
     xorg.libX11.dev
-    libGL
     zlib
+    libxkbcommon
+    udev
     libiconv
     openssl.dev
     rustup
-    wayland
     ];
-    
-    LIBCLANG_PATH = pkgs.lib.makeLibraryPath [ pkgs.llvmPackages_latest.libclang.lib ];
+     LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
+     LIBCLANG_PATH = pkgs.lib.makeLibraryPath [ pkgs.llvmPackages_latest.libclang.lib ];
     
     shellHook = ''
       export PATH=$PATH:''${CARGO_HOME:-~/.cargo}/bin
@@ -43,29 +61,7 @@ in
     
     RUSTFLAGS = (builtins.map (a: ''-L ${a}/lib'') [
     ]);
-    
-    LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${ with pkgs; lib.makeLibraryPath [
-    wayland
-    libxkbcommon
-    fontconfig
-    vulkan-loader
-    libGL
-    libGLU
-    alsa-lib.dev
-    alsa-lib
-    xorg.libXi
-    xorg.libXext
-    xorg.libXrandr
-    xorg.libXinerama
-    xorg.libXcursor
-    xorg.libX11
-    xorg.libX11.dev
-    libGL
- 
-    ] }";
-
-
-    BINDGEN_EXTRA_CLANG_ARGS =
+  BINDGEN_EXTRA_CLANG_ARGS =
     (builtins.map (a: ''-I"${a}/include"'') [
       pkgs.glibc.dev
     ])
@@ -74,4 +70,6 @@ in
       ''-I"${pkgs.glib.dev}/include/glib-2.0"''
       ''-I${pkgs.glib.out}/lib/glib-2.0/include/''
     ];
+
 }
+
