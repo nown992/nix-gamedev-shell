@@ -47,6 +47,7 @@ with pkgs;
     xorg.libX11.dev
     zlib
     libxkbcommon
+    libudev-zero
     udev
     libiconv
     openssl.dev
