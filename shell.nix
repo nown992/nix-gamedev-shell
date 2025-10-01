@@ -17,6 +17,7 @@ with pkgs;
   wayland
   ];
   buildInputs = [
+    wayland.dev
     alsa-lib
     libxkbcommon 
     vulkan-tools
